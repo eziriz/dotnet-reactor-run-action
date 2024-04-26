@@ -1,0 +1,73 @@
+name: 'Run .NET Reactor'
+author: Eziriz
+description: 'Runs .NET Reactor based on the operating system of the GitHub Actions runner.'
+inputs:
+  project_file:
+    description: 'Path to the .NET Reactor project file.'
+    required: false
+  input_path:
+    description: 'Input path of the .NET assembly to obfuscate.'
+    required: false
+  output_path:
+    description: 'Output path for the obfuscated .NET assembly.'
+    required: false
+  additional_arguments:
+    description: '(Additional) command-line parameters.'
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check and Install .NET Reactor if needed
+      run: |
+        os_name=$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
+        reactor_dir="${{ env.DOTNETREACTORROOT }}"
+        
+        exe_name="dotNET_Reactor"
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          exe_name="dotNET_Reactor.Console.exe"
+        fi
+        
+        if [ ! -f "$reactor_dir/$exe_name" ]; then
+          echo "Installing latest .NET Reactor version..."
+          
+          extract_dir="dotnet_reactor_${os_name}_latest"
+          download_url="https://raw.githubusercontent.com/eziriz/ReactorAction/main/versions/${os_name}_latest.zip"
+          
+          echo "Downloading .NET Reactor ($download_url)..."
+          curl -L $download_url -o dotNetReactor.zip || { echo "Download failed"; exit 1; }
+
+          echo "Unzipping .NET Reactor to ${extract_dir}..."
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            7z x dotNetReactor.zip -o./${extract_dir} || { echo "Unzip failed"; exit 1; }
+          else
+            unzip dotNetReactor.zip -d ${extract_dir} || { echo "Unzip failed"; exit 1; }
+          fi
+          
+          echo "DOTNETREACTORROOT=$PWD/${extract_dir}" >> $GITHUB_ENV          
+        fi
+      shell: bash
+
+    - name: Execute .NET Reactor
+      run: |
+        command="${{ env.DOTNETREACTORROOT }}/dotNET_Reactor"
+        
+        if [[ "${{ runner.os }}" == "Windows" ]]; then
+          command="${{ env.DOTNETREACTORROOT }}/dotNET_Reactor.Console.exe"
+        else
+          chmod +x "$command"
+        fi
+        
+        args=""
+
+        # Dynamically build arguments
+        [[ -n "${{ inputs.input_path }}" ]] && args+=" -file '${{ inputs.input_path }}'"
+        [[ -n "${{ inputs.project_file }}" ]] && args+=" -project '${{ inputs.project_file }}'"
+        [[ -n "${{ inputs.output_path }}" ]] && args+=" -targetfile '${{ inputs.output_path }}'"
+        [[ -n "${{ inputs.additional_arguments }}" ]] && args+=" ${{ inputs.additional_arguments }}"
+        
+        echo "$command $args"
+        
+        full_command="$command $args"
+        eval $full_command
+      shell: bash
