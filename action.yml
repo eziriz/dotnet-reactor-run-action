@@ -2,6 +2,7 @@ name: '.NET Reactor Run'
 author: Eziriz
 description: 'Runs .NET Reactor based on the operating system of the GitHub Actions runner.'
 branding:
+  icon: 'reactor-icon.png'
   color: 'white'
 inputs:
   project_file:
