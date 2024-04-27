@@ -1,7 +1,7 @@
 
 # .NET Reactor Run Action
 
-This is the .NET Reactor Run Action. It allows you to run .NET Reactor after it has been installed. Make sure you have already installed .NET Reactor using the .NET Reactor Install Action.
+This is the .NET Reactor Run Action. It allows you to run .NET Reactor after it has been installed. Make sure you have already installed .NET Reactor using the [.NET Reactor Install Action](https://github.com/marketplace/actions/net-reactor-install).
 
 ## Action 1: 'Install .NET Reactor'
 
