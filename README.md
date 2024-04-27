@@ -64,6 +64,7 @@ jobs:
     - name: Install .NET Reactor
       uses: eziriz/dotnet-reactor-install-action@v1.0.0
       with:
+	    version: '6.9.8.0'
         license: ${{ secrets.NET_REACTOR_LICENSE }}
 
     - name: Build Assembly
