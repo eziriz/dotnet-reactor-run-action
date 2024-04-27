@@ -41,8 +41,8 @@ steps:
 - name: Run .NET Reactor
   uses: eziriz/dotnet-reactor-run-action@v1.0.0
   with:
-    input_path: './path/to/assembly.dll'
-    output_path: './path/to/obfuscated/<AssemblyFileName>'
+    input_path: '$GITHUB_WORKSPACE\path\to\assembly.dll'
+    output_path: '$GITHUB_WORKSPACE\path\to\obfuscated\<AssemblyFileName>'
     additional_arguments: '-licensed'
 ```
 
@@ -72,8 +72,8 @@ jobs:
     - name: Run .NET Reactor
       uses: eziriz/dotnet-reactor-run-action@v1.0.0
       with:
-        input_path: './bin/Release/myapp.dll'
-        output_path: './bin/Release/obfuscated/<AssemblyFileName>'
+        input_path: '$GITHUB_WORKSPACE\bin\Release\myapp.dll'
+        output_path: '$GITHUB_WORKSPACE\bin\Release\obfuscated\<AssemblyFileName>'
         additional_arguments: '-licensed'
 ```
 
