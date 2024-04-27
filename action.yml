@@ -1,6 +1,8 @@
-name: 'Run .NET Reactor'
+name: '.NET Reactor Run'
 author: Eziriz
 description: 'Runs .NET Reactor based on the operating system of the GitHub Actions runner.'
+branding:
+  color: 'white'
 inputs:
   project_file:
     description: 'Path to the .NET Reactor project file.'
